@@ -32,4 +32,22 @@ function createFile(filePath, fileContent) {
     });
 }
 
+const encryptFile = (filePath) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) return console.error(err);
+
+    const encryptedText = aes.encryptText(data);
+
+    const newFilePath = filePath.replace(/\.txt$/, ".enc");
+    
+    fs.writeFile(newFilePath, encryptedText, (err) => {
+      if (err) return console.error(err);
+
+      console.log(`Текст у файлі "${filePath}" було успішно зашифровано та збережено у файлі "${newFilePath}"`);
+    });
+  });
+};
+
+encryptFile("text.txt");
+
 readFile("text.txt"); // reading a file
