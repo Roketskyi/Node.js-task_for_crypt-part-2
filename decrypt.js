@@ -8,20 +8,26 @@ var aes = new pidCrypt.AES.CBC();
 const fs = require("fs");
 // -------------------------------
 
-
-
 const decryptFile = (filePath) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(filePath, "utf8", (err, data) => {
         if (err) return console.error(err);
-        
+
         const decryptedText = aes.decryptText(data);
-        
-        fs.writeFile(filePath, decryptedText, (err) => {
+
+        const newFilePath = filePath.replace(/\.enc$/, ".txt");
+
+        fs.writeFile(newFilePath, decryptedText, (err) => {
             if (err) return console.error(err);
-            
-            console.log(`Текст у файлі "${filePath}" було успішно дешифровано!`);
+
+            console.log(`Текст у файлі "${filePath}" було успішно дешифровано та збережено у файлі "${newFilePath}".`);
+
+            fs.unlink(filePath, (err) => {
+                if (err) return console.error(err);
+                
+                console.log(`Файл "${filePath}" був успішно видалений.`);
+            });
         });
     });
 };
 
-decryptFile("text.txt");
+decryptFile("text.enc");
